@@ -3,6 +3,7 @@ package com.example.image_manager.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -10,6 +11,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Entity
+@Data
 @Table(name = "image")
 public class Image extends BaseEntity {
 
