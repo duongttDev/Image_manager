@@ -38,7 +38,7 @@ public class ImageServiceImpl implements ImageService {
         Pageable pageable = PageRequest.of(page, size);
 
         try {
-            Page<Image> pageImage = imageRepository.findAll(pageable);
+            Page<Image> pageImage = imageRepository.findAllByOrderByCreateAtDesc(pageable);
             if (pageImage.getTotalElements() == 0) {
                 throw new BusinessException(404, "No Date");
             }
@@ -63,6 +63,7 @@ public class ImageServiceImpl implements ImageService {
         Image imageDb = null;
         try {
             Image image = modelMapper.map(imageRequest, Image.class);
+            image.setView(0);
             image.setCreateBy(1);
             image.setUpdateBy(1);
             image.setCreateAt(LocalDateTime.now());
