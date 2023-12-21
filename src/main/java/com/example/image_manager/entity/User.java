@@ -3,13 +3,14 @@ package com.example.image_manager.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-
+@Data
 @Entity
 @Table(name = "user")
 public class User {
