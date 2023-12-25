@@ -1,10 +1,13 @@
 package com.example.image_manager.service;
 
 import com.example.image_manager.dto.UserDto;
+import com.example.image_manager.entity.Role;
 import com.example.image_manager.entity.User;
 import com.example.image_manager.exception.BusinessException;
+import com.example.image_manager.repository.RoleRepository;
 import com.example.image_manager.repository.UserRepository;
 import com.example.image_manager.request.LoginRequest;
+import com.example.image_manager.request.RegisterRequest;
 import com.example.image_manager.response.EntityCustomResponse;
 import com.example.image_manager.security.jwt.JwtTokenProvider;
 import com.example.image_manager.security.jwt.UserDetailsImpl;
@@ -43,6 +46,9 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @Override
     public EntityCustomResponse login(LoginRequest loginRequest) {
         UserDto userDto = new UserDto();
@@ -73,6 +79,41 @@ public class AuthServiceImpl implements AuthService {
             } else {
                 throw new BusinessException(500, "Mật khẩu không đúng");
             }
+
+        } catch (
+                BusinessException businessException) {
+            return new EntityCustomResponse(0, businessException.getMessage(), businessException.getStatusCode(), List.of());
+        } catch (Exception exception) {
+            return new EntityCustomResponse(0, "Error system ", 500, exception.getMessage());
+        }
+        return new EntityCustomResponse(1, "Đăng nhập thành công", 200, userDto);
+    }
+
+    @Override
+    public EntityCustomResponse register(RegisterRequest registerRequest) {
+        UserDto userDto = new UserDto();
+        try {
+            if (userRepository.existsByUsername(registerRequest.getUsername())) {
+                throw new BusinessException(401, "username đã tồn tại");
+            }
+            if (userRepository.existsByEmail(registerRequest.getEmail())) {
+                throw new BusinessException(401, "email đã tồn tại");
+            }
+            if (userRepository.existsByUsername(registerRequest.getPhone())) {
+                throw new BusinessException(401, "số điện thoại đã tồn tại");
+            }
+
+            User user = new User(null, registerRequest.getUsername(), passwordEncoder.encode(registerRequest.getPassword())
+                    , registerRequest.getName(), registerRequest.getPhone(), registerRequest.getEmail(), null);
+
+            //search role
+            Role role = roleRepository.findByName(registerRequest.getRole()).orElseThrow(() -> new BusinessException(401, "Không tìm thấy role"));
+            user.setRoles(role);
+
+            //save
+            User userDb = userRepository.save(user);
+            userDto = modelMapper.map(userDb, UserDto.class);
+
 
         } catch (
                 BusinessException businessException) {

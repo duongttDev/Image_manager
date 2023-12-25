@@ -64,22 +64,7 @@ public class WebSecurityConfig {
 				.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
 				.authorizeHttpRequests().requestMatchers("/api/user/**")
 				.permitAll().requestMatchers("/api/auth/**")
-				.permitAll().requestMatchers("/api/cart_item/**")
-				.permitAll().requestMatchers("/api/cart/**")
-				.permitAll().requestMatchers("/api/search/**")
-				.permitAll().requestMatchers("/api/publisher/**")
-				.permitAll().requestMatchers("/api/author/**")
-				.permitAll().requestMatchers("/api/department/**")
-				.permitAll().requestMatchers("/api/book/get-one",
-						"/api/book/search", "/api/book/favorite", "/api/book/add-favorite", "api/book", "/api/order/")
 				.permitAll().anyRequest().authenticated();
-//				.authorizeHttpRequests((requests) -> requests.requestMatchers("/api/user/**").permitAll()
-//						.requestMatchers("/api/auth/**").permitAll().requestMatchers("/api/cart_item/**").permitAll()
-//						.requestMatchers("/api/cart/**").permitAll()
-//						.requestMatchers("/api/book/get-one", "/api/book/search", "/api/book/favorite",
-//								"/api/book/add-favorite", "/api/book")
-//						.permitAll().anyRequest().authenticated())
-//				.formLogin(Customizer.withDefaults()).httpBasic(Customizer.withDefaults());
 		return http.build();
 
 
